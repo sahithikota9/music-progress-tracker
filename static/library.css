@@ -1,0 +1,101 @@
+/* Overall theme */
+body.theme {
+    background: #0a0f1f;
+    color: white;
+    font-family: "Poppins", sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header */
+.header {
+    text-align: center;
+    padding: 30px 0;
+}
+
+.title {
+    font-size: 38px;
+    font-weight: 700;
+}
+
+.subtitle {
+    opacity: 0.7;
+}
+
+/* Controls */
+.controls {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.controls input,
+.controls select {
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+}
+
+/* Grid */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 18px;
+    padding: 20px;
+}
+
+/* Card */
+.card {
+    background: #131b33;
+    padding: 20px;
+    border-radius: 14px;
+    text-align: center;
+    box-shadow: 0 0 12px rgba(0,0,0,0.4);
+}
+
+.card h3 {
+    margin: 0 0 5px;
+}
+
+.category {
+    font-size: 13px;
+    opacity: 0.7;
+    margin-bottom: 10px;
+}
+
+/* Upload Box */
+.upload-box {
+    background: #151f36;
+    width: 90%;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 14px;
+    text-align: center;
+    box-shadow: 0 0 12px rgba(0,0,0,0.4);
+}
+
+.upload-box input,
+.upload-box select {
+    margin: 10px 0;
+}
+
+.section-title {
+    text-align: center;
+    margin-top: 30px;
+}
+
+/* Buttons */
+button {
+    padding: 10px 20px;
+    background: #4263eb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #5b76f3;
+}

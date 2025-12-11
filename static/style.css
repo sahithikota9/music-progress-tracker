@@ -1,0 +1,279 @@
+/* ========================================================
+   Music Progress Tracker - Global Styles (style.css)
+   Theme: Mixed Pastels + Pastel Glass cards + Navy base
+   Layout: Standard width (900-1100px)
+   Buttons: Pastel gradient
+   Font: Source Sans Pro (400,600,700)
+   ======================================================== */
+
+/* ---------- Fonts ---------- */
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap');
+
+:root{
+  /* Core */
+  --navy-900: #0A2A43;    /* main navy */
+  --navy-950: #07172b;    /* darker navy for accents */
+  --text-dark: #0F1724;   /* dark text on light backgrounds */
+
+  /* Pastel accents */
+  --pastel-blue: #a7e0ff;
+  --pastel-lavender: #c8a4ff;
+  --pastel-mint: #aaf0dc;
+  --pastel-peach: #ffd6c2;
+
+  /* Glass opacities */
+  --glass-bg: rgba(255,255,255,0.7);
+  --card-blur: 8px;
+
+  /* Buttons / gradients */
+  --btn-grad-1: linear-gradient(135deg, #9fd3ff 0%, #c8a4ff 50%, #ffd6c2 100%);
+  --btn-grad-2: linear-gradient(135deg, #aaf0dc 0%, #c8a4ff 60%, #a7e0ff 100%);
+
+  /* Measurements */
+  --max-width: 1100px;
+  --radius-lg: 14px;
+  --radius-md: 10px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 20px;
+  --space-lg: 32px;
+  --shadow-soft: 0 6px 18px rgba(10,42,67,0.08);
+  --shadow-elev: 0 10px 30px rgba(10,42,67,0.12);
+}
+
+/* ---------- Global resets ---------- */
+* { box-sizing: border-box; }
+html,body{ height:100%; margin:0; padding:0; font-family: 'Source Sans 3', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; background: #f7f8ff; color: var(--text-dark); }
+
+/* ---------- Layout containers ---------- */
+/* Sidebar is fixed (already styled in style.css earlier), main content here */
+#content {
+  margin-left: 240px; /* matches sidebar width */
+  padding: var(--space-lg);
+  min-height: calc(100vh - 60px);
+  display: block;
+  background: transparent;
+}
+
+/* Center content width */
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+/* Topbar override slight padding (layout.html sets topbar) */
+#topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ---------- Typography ---------- */
+h1.title {
+  font-size: 26px;
+  margin: 0 0 var(--space-md) 0;
+  color: var(--navy-950);
+  font-weight: 700;
+}
+
+h2 { font-size: 18px; margin: 0 0 12px 0; color: var(--navy-950); font-weight:600; }
+
+/* body text */
+p, li, label { font-size: 15px; line-height:1.5; color: var(--text-dark); }
+
+/* small muted text */
+.muted { color: #687084; font-size: 13px; }
+
+/* ---------- Soft Pastel Glass Card ---------- */
+.card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.72), rgba(248,248,255,0.6));
+  backdrop-filter: blur(var(--card-blur));
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  box-shadow: var(--shadow-soft);
+  border: 1px solid rgba(255,255,255,0.6);
+  margin-bottom: var(--space-md);
+}
+
+/* Slight variant: pastel-tinted card */
+.card.tint-blue { background: linear-gradient(180deg, rgba(167,224,255,0.28), rgba(255,255,255,0.38)); }
+.card.tint-lavender { background: linear-gradient(180deg, rgba(200,164,255,0.22), rgba(255,255,255,0.36)); }
+.card.tint-mint { background: linear-gradient(180deg, rgba(170,240,220,0.22), rgba(255,255,255,0.36)); }
+.card.tint-peach { background: linear-gradient(180deg, rgba(255,214,194,0.22), rgba(255,255,255,0.36)); }
+
+/* ---------- Form Controls ---------- */
+label { display:block; margin-bottom:6px; font-weight:600; color: var(--navy-950); }
+input[type="text"], input[type="password"], textarea, select {
+  width:100%;
+  padding:12px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(15,23,36,0.08);
+  background: rgba(255,255,255,0.9);
+  color: var(--text-dark);
+  font-size: 15px;
+  transition: box-shadow 0.16s ease, border-color 0.16s ease;
+}
+textarea { min-height:110px; resize:vertical; }
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: rgba(159,114,255,0.9);
+  box-shadow: 0 6px 20px rgba(159,114,255,0.12);
+}
+
+/* Form actions row */
+.form-row {
+  display:flex;
+  gap: var(--space-sm);
+  align-items:center;
+}
+
+/* ---------- Buttons: Pastel Gradient ---------- */
+.btn {
+  display:inline-block;
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-weight:600;
+  cursor:pointer;
+  border: none;
+  color: var(--navy-950);
+  box-shadow: 0 6px 18px rgba(10,42,67,0.06);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  background: var(--btn-grad-1);
+  background-size: 200% 200%;
+}
+.btn.secondary { background: var(--btn-grad-2); }
+.btn:hover { transform: translateY(-3px); box-shadow: var(--shadow-elev); }
+.btn.ghost {
+  background: transparent;
+  color: var(--navy-950);
+  border: 1px solid rgba(10,42,67,0.06);
+}
+
+/* ---------- Lists & tables ---------- */
+.list { list-style:none; padding:0; margin:0; }
+.list li { padding:10px 0; border-bottom: 1px dashed rgba(10,42,67,0.04); }
+.table {
+  width:100%;
+  border-collapse: collapse;
+  margin-top:12px;
+  background: transparent;
+}
+.table th, .table td {
+  padding: 10px 12px;
+  text-align:left;
+  border-bottom: 1px solid rgba(10,42,67,0.06);
+}
+
+/* ---------- Cards: header row ---------- */
+.card-header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:12px;
+}
+
+/* ---------- Small chips, badges ---------- */
+.chips { display:flex; gap:8px; flex-wrap:wrap; }
+.chip {
+  padding:6px 10px;
+  border-radius:999px;
+  background: rgba(10,42,67,0.04);
+  color: var(--navy-950);
+  font-weight:600;
+  font-size:13px;
+}
+
+/* ---------- Calendar / Monthly grid (analytics) ---------- */
+.calendar-grid {
+  display:grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap:10px;
+}
+.day-cell {
+  background: linear-gradient(180deg, rgba(255,255,255,0.75), rgba(248,248,255,0.6));
+  border-radius:10px;
+  padding:10px;
+  min-height:72px;
+  box-shadow: var(--shadow-soft);
+  border: 1px solid rgba(255,255,255,0.6);
+}
+.day-cell .hours { font-weight:700; color: var(--navy-950); font-size:16px; }
+.day-cell .note-icon { display:inline-block; margin-top:6px; color: #7a6d9a; font-size:13px; }
+.day-cell.empty { opacity:0.9; color:#6b7280; }
+
+/* Day highlight */
+.day-cell.active {
+  border-left: 4px solid var(--pastel-lavender);
+  background: linear-gradient(180deg, rgba(200,164,255,0.18), rgba(255,255,255,0.6));
+}
+
+/* ---------- Analytics Chart container ---------- */
+.chart-card {
+  padding: 18px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.82), rgba(248,248,255,0.6));
+  box-shadow: var(--shadow-soft);
+}
+
+/* ---------- Notifications list ---------- */
+.notification {
+  padding:12px;
+  border-radius:10px;
+  background: rgba(255,255,255,0.86);
+  border-left: 4px solid rgba(159,114,255,0.6);
+  margin-bottom:12px;
+}
+
+/* ---------- Profile ---------- */
+.profile-card {
+  display:flex;
+  gap:16px;
+  align-items:center;
+}
+
+/* Avatar placeholder */
+.avatar {
+  width:64px;
+  height:64px;
+  border-radius:12px;
+  background: linear-gradient(135deg, #e9eefc, #f2f8ff);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color: var(--navy-950);
+  font-weight:700;
+  font-size:20px;
+}
+
+/* ---------- Utility ---------- */
+.kpi-row { display:flex; gap:16px; flex-wrap:wrap; margin-bottom:16px; }
+.kpi {
+  flex:1;
+  min-width:150px;
+  padding:12px;
+  border-radius:12px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.82), rgba(248,248,255,0.6));
+  box-shadow: var(--shadow-soft);
+  text-align:center;
+}
+.kpi .num { font-size:20px; font-weight:700; color: var(--navy-950); }
+
+/* ---------- Mobile responsiveness ---------- */
+@media (max-width: 900px) {
+  #content { margin-left: 0; padding: 18px; }
+  #topbar { margin-left: 0; padding: 12px 18px; position: static; }
+  .container { padding: 0 6px; }
+  .calendar-grid { grid-template-columns: repeat(3, 1fr); }
+  .kpi-row { flex-direction: column; }
+  .btn { width:100%; }
+}
+
+/* ---------- Accessibility ---------- */
+:focus { outline: 3px solid rgba(159,114,255,0.18); outline-offset: 3px; }
+
+/* ---------- Tiny helpers ---------- */
+.mt-6 { margin-top: 6px; }
+.mt-12 { margin-top: 12px; }
+.mb-12 { margin-bottom: 12px; }
+.text-muted { color:#6b7280; font-size:13px; }
+.center { text-align:center; }

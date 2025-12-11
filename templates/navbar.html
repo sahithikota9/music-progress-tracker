@@ -1,0 +1,47 @@
+<!-- templates/navbar.html -->
+<div id="sidebar">
+    <div class="sidebar-title">
+        Music Progress Tracker
+    </div>
+
+    {% if session.get('role') == 'student' %}
+    <!-- STUDENT MENU -->
+
+    <div class="sidebar-section-title">Practice</div>
+    <a href="/dashboard" class="sidebar-link">Dashboard</a>
+    <a href="/analytics" class="sidebar-link">Analytics</a>
+    <a href="/errors" class="sidebar-link">Errors</a>
+    <a href="/notes" class="sidebar-link">Notes</a>
+
+    <div class="sidebar-section-title">Guidance</div>
+    <a href="/suggestions" class="sidebar-link">Suggestions</a>
+
+    <div class="sidebar-section-title">Resources</div>
+    <a href="/music-library" class="sidebar-link">Music Library</a>
+    <a href="/notifications" class="sidebar-link">Notifications</a>
+
+    <div class="sidebar-section-title">Account</div>
+    <a href="/profile" class="sidebar-link">Profile</a>
+    <a href="/logout" class="sidebar-link">Logout</a>
+
+    {% else %}
+    <!-- TEACHER MENU -->
+
+    <div class="sidebar-section-title">Dashboard</div>
+    <a href="/dashboard" class="sidebar-link">Dashboard</a>
+
+    <div class="sidebar-section-title">Resources</div>
+    <a href="/music-library" class="sidebar-link">Music Library</a>
+    <a href="/notifications" class="sidebar-link">Notifications</a>
+
+    <div class="sidebar-section-title">Account</div>
+    <a href="/profile" class="sidebar-link">Profile</a>
+    <a href="/logout" class="sidebar-link">Logout</a>
+
+    {% endif %}
+</div>
+
+<!-- Content wrapper so the page shifts right -->
+<div id="content">
+    {% block content %}{% endblock %}
+</div>

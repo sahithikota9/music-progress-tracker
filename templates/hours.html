@@ -1,0 +1,110 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h2 class="page-title">Hours Practiced</h2>
+
+<div class="calendar-container">
+    <div id="calendar"></div>
+</div>
+
+<!-- Modal -->
+<div id="entryModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+
+        <h3 id="modalDate"></h3>
+
+        <form id="entryForm">
+            <input type="hidden" id="modal-date" name="date">
+
+            <label>Hours Practiced</label>
+            <input type="number" step="0.1" id="modal-hours" required>
+
+            <label>Technique / Focus Area</label>
+            <textarea id="modal-technique" placeholder="Anything you worked on..."></textarea>
+
+            <label>Notes (optional)</label>
+            <textarea id="modal-notes" placeholder="Any additional notes..."></textarea>
+
+            <button type="button" class="btn" onclick="saveEntry()">Save Entry</button>
+            <button type="button" class="delete-btn" onclick="deleteEntry()">Delete</button>
+        </form>
+    </div>
+</div>
+
+<script>
+const savedData = {{ data|tojson }};
+
+function openModal(date) {
+    document.getElementById("entryModal").style.display = "block";
+    document.getElementById("modalDate").innerText = date;
+    document.getElementById("modal-date").value = date;
+
+    if (savedData[date]) {
+        document.getElementById("modal-hours").value = savedData[date].hours;
+        document.getElementById("modal-technique").value = savedData[date].technique || "";
+        document.getElementById("modal-notes").value = savedData[date].notes || "";
+    } else {
+        document.getElementById("modal-hours").value = "";
+        document.getElementById("modal-technique").value = "";
+        document.getElementById("modal-notes").value = "";
+    }
+}
+
+function closeModal() {
+    document.getElementById("entryModal").style.display = "none";
+}
+
+function saveEntry() {
+    const formData = new FormData();
+    formData.append("date", document.getElementById("modal-date").value);
+    formData.append("hours", document.getElementById("modal-hours").value);
+    formData.append("technique", document.getElementById("modal-technique").value);
+    formData.append("notes", document.getElementById("modal-notes").value);
+
+    fetch("/save_hours", {
+        method: "POST",
+        body: formData
+    }).then(() => location.reload());
+}
+
+function deleteEntry() {
+    const formData = new FormData();
+    formData.append("date", document.getElementById("modal-date").value);
+
+    fetch("/delete_hours", {
+        method: "POST",
+        body: formData
+    }).then(() => location.reload());
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    const calendar = document.getElementById("calendar");
+
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth();
+
+    const firstDay = new Date(year, month, 1).getDay();
+    const numDays = new Date(year, month + 1, 0).getDate();
+
+    let html = "<div class='calendar-grid'>";
+    for (let i = 0; i < firstDay; i++) html += "<div class='empty'></div>";
+
+    for (let d = 1; d <= numDays; d++) {
+        const dateStr = `${year}-${month+1}-${d}`;
+        const hasEntry = !!savedData[dateStr];
+
+        html += `<div 
+                    class='day ${hasEntry ? "filled" : ""}' 
+                    onclick="openModal('${dateStr}')">
+                    ${d}
+                </div>`;
+    }
+
+    html += "</div>";
+    calendar.innerHTML = html;
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,331 @@
+{% extends "layout.html" %}
+{% block content %}
+
+{#
+Final Analytics Page (single scrolling page)
+
+Expected server-side template variables (optional fallbacks used):
+  total_hours_alltime
+  best_month
+  avg_monthly_hours
+  total_notes_alltime
+  total_errors_alltime
+
+  month_name, year, month_hours, avg_per_day, days_practiced, days_in_month, longest_streak
+  heatmap (list of [tech, score])
+  max_heat_score
+  chart_days (int, default 30)
+
+Client-side APIs required (the JS calls these):
+  GET /api/hours_data                -> [{date: "YYYY-MM-DD", hours: num}, ...] (last N days)
+  GET /api/weekly_category_data      -> { categories: [{name, hours, sessions, avg, pct}], daily: {...}, total_week }
+#}
+
+<!-- page wrapper -->
+<div class="container" style="padding-top:10px; padding-bottom:36px;">
+
+  <!-- TOP: All-time summary cards -->
+  <div style="display:grid; grid-template-columns: repeat(5, 1fr); gap:16px; margin-bottom:18px;">
+    <div class="card tint-blue" aria-label="Total hours all time">
+      <div class="muted">Total Hours (All-time)</div>
+      <div class="num" style="font-size:22px;">{{ total_hours_alltime if total_hours_alltime is defined else '—' }}</div>
+      <div class="muted">hrs</div>
+    </div>
+
+    <div class="card tint-mint" aria-label="Best month">
+      <div class="muted">Best Month</div>
+      <div class="num" style="font-size:20px;">{{ best_month if best_month is defined else '—' }}</div>
+      <div class="muted">hrs</div>
+    </div>
+
+    <div class="card tint-peach" aria-label="Average monthly hours">
+      <div class="muted">Avg Monthly Hours</div>
+      <div class="num" style="font-size:20px;">{{ avg_monthly_hours if avg_monthly_hours is defined else '—' }}</div>
+      <div class="muted">hrs</div>
+    </div>
+
+    <div class="card tint-lavender" aria-label="Total notes">
+      <div class="muted">Total Notes</div>
+      <div class="num" style="font-size:20px;">{{ total_notes_alltime if total_notes_alltime is defined else '—' }}</div>
+      <div class="muted">notes</div>
+    </div>
+
+    <div class="card tint-blue" aria-label="Total errors">
+      <div class="muted">Total Errors</div>
+      <div class="num" style="font-size:20px;">{{ total_errors_alltime if total_errors_alltime is defined else '—' }}</div>
+      <div class="muted">errors</div>
+    </div>
+  </div>
+
+  <!-- Monthly summary / KPIs -->
+  <div class="card card-grid" style="align-items:stretch; margin-bottom:18px;">
+    <div class="card-left">
+      <h1 class="title">Your Analytics</h1>
+      <p class="muted">Live summary for {{ month_name if month_name is defined else "" }} {{ year if year is defined else "" }}</p>
+
+      <div class="kpi-row" style="margin-top:12px;">
+        <div class="kpi card tint-blue">
+          <div class="muted">Total this month</div>
+          <div class="num">{{ month_hours if month_hours is defined else 0 }}</div>
+          <div class="muted">hrs</div>
+        </div>
+
+        <div class="kpi card tint-mint">
+          <div class="muted">Avg / day (practiced days)</div>
+          <div class="num">{{ avg_per_day if avg_per_day is defined else 0 }}</div>
+          <div class="muted">hrs</div>
+        </div>
+
+        <div class="kpi card tint-peach">
+          <div class="muted">Days practiced</div>
+          <div class="num">{{ days_practiced if days_practiced is defined else 0 }}/{{ days_in_month if days_in_month is defined else '—' }}</div>
+        </div>
+
+        <div class="kpi card tint-lavender">
+          <div class="muted">Longest streak</div>
+          <div class="num">{{ longest_streak if longest_streak is defined else 0 }}</div>
+          <div class="muted">days</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-right card tint-lavender" style="min-width:300px;">
+      <h2 class="muted">Notes</h2>
+      <p class="muted">Open the Hours tab to view day-by-day entries and notes.</p>
+      <div style="height:12px"></div>
+      <div class="muted" style="font-size:13px;">Tip: add technique text in your daily entry to populate the category charts.</div>
+    </div>
+  </div>
+
+  <!-- LINE CHART (last N days) -->
+  <div class="card" style="margin-bottom:18px;">
+    <div class="card-header">
+      <h2>Hours — last {{ chart_days if chart_days is defined else 30 }} days</h2>
+      <div class="muted">Auto-updates from your Hours tab</div>
+    </div>
+    <div class="chart-card">
+      <canvas id="hoursChart" height="200" aria-label="Hours over time"></canvas>
+    </div>
+  </div>
+
+  <!-- 12-month bar chart -->
+  <div class="card" style="margin-bottom:18px;">
+    <div class="card-header">
+      <h2>Monthly totals (last 12 months)</h2>
+      <div class="muted">Yearly overview</div>
+    </div>
+    <div class="chart-card" style="height:200px;">
+      <canvas id="monthsBar" height="200" aria-label="Monthly totals chart"></canvas>
+    </div>
+  </div>
+
+  <!-- Technique heatmap -->
+  <div class="card" style="margin-bottom:18px;">
+    <div class="card-header"><h2>Technique Focus Heatmap</h2></div>
+    <div id="heatmap" style="display:flex; flex-direction:column; gap:10px; margin-top:10px;">
+      {% if heatmap %}
+        {% set max_heat_score = max_heat_score if max_heat_score else 1 %}
+        {% for tech,score in heatmap %}
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div style="width:170px; font-weight:600; color:var(--navy-950); text-transform: capitalize;">{{ tech }}</div>
+            <div style="flex:1; display:flex; gap:6px;">
+              {% set maxblocks = 12 %}
+              {% set intensity = ((score / max_heat_score) * maxblocks) if max_heat_score > 0 else 0 %}
+              {% for i in range(maxblocks) %}
+                {% if i < intensity %}
+                  <div style="flex:1; height:14px; border-radius:6px; background:linear-gradient(90deg,#ffd6c2,#c8a4ff);"></div>
+                {% else %}
+                  <div style="flex:1; height:14px; border-radius:6px; background:rgba(10,42,67,0.06);"></div>
+                {% endif %}
+              {% endfor %}
+            </div>
+            <div style="width:46px; text-align:right; font-weight:700;">{{ score }}</div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p class="muted">No technique text recorded yet — add it in the Hours tab to populate this section.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Category breakdown and charts (recent period) -->
+  <div class="card" style="margin-bottom:18px;">
+    <div class="card-header"><h2>Category breakdown — recent period</h2></div>
+
+    <div style="display:flex; gap:16px; margin-top:12px;">
+      <div style="flex:1;">
+        <table class="table" aria-label="Category breakdown">
+          <thead>
+            <tr><th>Category</th><th>Hours</th><th>Sessions</th><th>Avg</th><th>%</th></tr>
+          </thead>
+          <tbody id="category-table-body">
+            <tr><td colspan="5" class="muted">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="width:280px;">
+        <canvas id="categoryBar" height="180"></canvas>
+        <div style="height:12px"></div>
+        <canvas id="categoryPie" height="180"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Monthly details footer card -->
+  <div class="card">
+    <h2>Monthly details</h2>
+    <p class="muted">For a day-by-day view open the <a href="{{ url_for('hours') }}">Hours Practiced</a> tab.</p>
+    <div style="margin-top:10px;">
+      <strong>Total this month:</strong> {{ month_hours if month_hours is defined else 0 }} hrs<br>
+      <strong>Days practiced:</strong> {{ days_practiced if days_practiced is defined else 0 }} / {{ days_in_month if days_in_month is defined else '—' }}<br>
+      <strong>Average (practiced days):</strong> {{ avg_per_day if avg_per_day is defined else 0 }} hrs
+    </div>
+  </div>
+
+</div> <!-- /container -->
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+/* ---------- helpers ---------- */
+async function fetchJSON(url) {
+  const res = await fetch(url, { cache: "no-store" });
+  if (!res.ok) throw new Error("Network error");
+  return await res.json();
+}
+
+/* ---------- Render last-N-days line ---------- */
+async function renderHoursLine() {
+  const raw = await fetchJSON("{{ url_for('api_hours_data') }}");
+  const labels = raw.map(d => d.date.slice(5)); // MM-DD
+  const values = raw.map(d => Number(d.hours || 0));
+
+  const ctx = document.getElementById('hoursChart').getContext('2d');
+  if (window.hoursChart) window.hoursChart.destroy();
+  window.hoursChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Hours',
+        data: values,
+        borderWidth: 2,
+        borderColor: '#09203f',
+        backgroundColor: 'rgba(168, 145, 255, 0.18)',
+        pointBackgroundColor: '#09203f',
+        tension: 0.28,
+        fill: true,
+        pointRadius: 3
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        x: { grid: { display: false }, ticks: { color: '#1b2b44' } },
+        y: { beginAtZero: true, grid: { color: 'rgba(10,42,67,0.06)' }, ticks: { color: '#1b2b44' } }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: { backgroundColor: 'white', titleColor: '#09203f', bodyColor: '#09203f', borderColor: 'rgba(10,42,67,0.06)', borderWidth: 1 }
+      }
+    }
+  });
+}
+
+/* ---------- Months bar (aggregates if server returns only last N days) ---------- */
+async function renderMonthsBar() {
+  const raw = await fetchJSON("{{ url_for('api_hours_data') }}");
+  // Aggregate by YYYY-MM from returned days
+  const map = {};
+  raw.forEach(d => {
+    const m = d.date.slice(0,7); // YYYY-MM
+    map[m] = (map[m] || 0) + Number(d.hours || 0);
+  });
+  const labels = Object.keys(map).sort();
+  const values = labels.map(l => map[l]);
+  const ctx = document.getElementById('monthsBar').getContext('2d');
+  if (window.monthsBar) window.monthsBar.destroy();
+  window.monthsBar = new Chart(ctx, {
+    type: 'bar',
+    data: { labels, datasets: [{ data: values, backgroundColor: labels.map((_,i)=> getPalette(i)) }] },
+    options: { plugins:{legend:{display:false}}, scales:{ y:{ beginAtZero:true } } }
+  });
+}
+
+/* ---------- Category charts + table ---------- */
+async function renderCategoryCharts() {
+  const d = await fetchJSON("{{ url_for('api_weekly_category_data') }}");
+  const cats = d.categories || [];
+  const tbody = document.getElementById('category-table-body');
+  tbody.innerHTML = "";
+  const labels = [];
+  const dataVals = [];
+  const colors = [];
+
+  if (!cats.length) {
+    tbody.innerHTML = '<tr><td colspan="5" class="muted">No categories recorded recently.</td></tr>';
+  }
+
+  cats.forEach((c,i) => {
+    labels.push(c.name);
+    dataVals.push(c.hours || 0);
+    colors.push(getPalette(i));
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td style="text-transform:capitalize">${escapeHtml(c.name)}</td><td>${(c.hours||0).toFixed(2)}</td><td>${c.sessions}</td><td>${(c.avg||0).toFixed(2)}</td><td>${(c.pct||0).toFixed(0)}%</td>`;
+    tbody.appendChild(tr);
+  });
+
+  const ctxBar = document.getElementById('categoryBar').getContext('2d');
+  if (window.catBar) window.catBar.destroy();
+  window.catBar = new Chart(ctxBar, {
+    type: 'bar',
+    data: { labels, datasets: [{ data: dataVals, backgroundColor: colors }] },
+    options: { plugins:{legend:{display:false}}, scales:{ y:{ beginAtZero:true } } }
+  });
+
+  const ctxPie = document.getElementById('categoryPie').getContext('2d');
+  if (window.catPie) window.catPie.destroy();
+  window.catPie = new Chart(ctxPie, {
+    type: 'pie',
+    data: { labels, datasets: [{ data: dataVals, backgroundColor: colors }] },
+    options: { plugins:{ legend:{ position:'bottom' } } }
+  });
+
+  if (d.total_week !== undefined && document.getElementById('stat-period')) {
+    document.getElementById('stat-period').innerText = d.total_week;
+  }
+}
+
+/* ---------- helpers ---------- */
+function getPalette(i){
+  const p = ['#a7e0ff','#c8a4ff','#aaf0dc','#ffd6c2','#b8e0ff','#d6b4ff','#ffd1e0','#c8ffe0'];
+  return p[i % p.length];
+}
+function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+/* ---------- init ---------- */
+(async function(){
+  try {
+    await Promise.all([ renderHoursLine(), renderMonthsBar(), renderCategoryCharts() ]);
+  } catch (e) {
+    console.error("Analytics load error:", e);
+  }
+})();
+</script>
+
+<style>
+/* Page-level navy + pastel accents (small overrides) */
+body { background: linear-gradient(180deg, #f6f7ff 0%, #f2f6ff 100%); }
+.card { border-radius: 14px; padding:16px; box-shadow: 0 8px 24px rgba(10,42,67,0.06); border: 1px solid rgba(255,255,255,0.6); }
+.chart-card { background: linear-gradient(180deg, rgba(255,255,255,0.86), rgba(248,248,255,0.6)); border-radius:12px; padding:12px; }
+.kpi { padding:12px; border-radius:12px; }
+@media (max-width: 900px) {
+  .container { padding-left:12px; padding-right:12px; }
+  .kpi-row { flex-direction: column; }
+}
+</style>
+
+{% endblock %}

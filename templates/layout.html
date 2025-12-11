@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title if title else "Music Progress Tracker" }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="sidebar">
+
+    <div class="sidebar-title">
+        🎵 Music Progress Tracker
+    </div>
+
+    <div class="sidebar-section">
+        {% if session['role'] == 'student' %}
+
+            <a href="{{ url_for('dashboard_student') }}"
+               class="sidebar-link {% if active=='dashboard' %}active{% endif %}">
+               Dashboard
+            </a>
+
+            <a href="{{ url_for('hours') }}"
+               class="sidebar-link {% if active=='hours' %}active{% endif %}">
+               Hours Practiced
+            </a>
+
+            <a href="{{ url_for('notes') }}"
+               class="sidebar-link {% if active=='notes' %}active{% endif %}">
+               Notes
+            </a>
+
+            <a href="{{ url_for('errors') }}"
+               class="sidebar-link {% if active=='errors' %}active{% endif %}">
+               Errors
+            </a>
+
+            <a href="{{ url_for('analytics') }}"
+               class="sidebar-link {% if active=='analytics' %}active{% endif %}">
+               Analytics
+            </a>
+
+            <a href="{{ url_for('suggestions') }}"
+               class="sidebar-link {% if active=='suggestions' %}active{% endif %}">
+               Smart Suggestions
+            </a>
+
+            <a href="{{ url_for('music_library') }}"
+               class="sidebar-link {% if active=='library' %}active{% endif %}">
+               Music Library
+            </a>
+
+            <a href="{{ url_for('profile') }}"
+               class="sidebar-link {% if active=='profile' %}active{% endif %}">
+               Profile
+            </a>
+
+            <a href="{{ url_for('logout') }}" class="sidebar-link logout-link">
+                Log Out
+            </a>
+
+        {% elif session['role'] == 'teacher' %}
+
+            <a href="{{ url_for('dashboard_teacher') }}"
+               class="sidebar-link {% if active=='dashboard' %}active{% endif %}">
+               Dashboard
+            </a>
+
+            <a href="{{ url_for('notifications') }}"
+               class="sidebar-link {% if active=='notifications' %}active{% endif %}">
+               Notifications
+            </a>
+
+            <a href="{{ url_for('music_library') }}"
+               class="sidebar-link {% if active=='library' %}active{% endif %}">
+               Music Library
+            </a>
+
+            <a href="{{ url_for('profile') }}"
+               class="sidebar-link {% if active=='profile' %}active{% endif %}">
+               Profile
+            </a>
+
+            <a href="{{ url_for('logout') }}" class="sidebar-link logout-link">
+                Log Out
+            </a>
+
+        {% endif %}
+    </div>
+</div>
+
+
+<div class="content-container">
+    <div class="page-header">
+        <h1>{{ title }}</h1>
+        {% if subtitle %}
+            <p>{{ subtitle }}</p>
+        {% endif %}
+    </div>
+
+    <div class="page-content">
+        {% block content %}{% endblock %}
+    </div>
+</div>
+
+</body>
+</html>

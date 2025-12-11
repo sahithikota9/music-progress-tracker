@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Suggestions</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            background: #f8f6ff;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .title {
+            font-size: 32px;
+            font-weight: 600;
+            color: #4a3aff;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .suggestion-card {
+            background: white;
+            padding: 22px;
+            border-radius: 18px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+        }
+
+        .suggestion-card h2 {
+            margin: 0 0 10px;
+            color: #3b2fd1;
+            font-size: 22px;
+        }
+
+        .suggestion-card ul {
+            margin: 0;
+            padding-left: 20px;
+            line-height: 1.7;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 20px;
+            background: #4a3aff;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .back-btn:hover {
+            background: #2b1fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="title">Practice Suggestions</h1>
+
+        <div class="suggestion-card">
+            <h2>🎯 Recommended Practice Goals</h2>
+            <ul>
+                <li>Practice at least 20–30 minutes daily.</li>
+                <li>Focus on 2 techniques per day (ex: scales + rhythm).</li>
+                <li>Record your playing once a week to track improvement.</li>
+                <li>Do warm-up exercises for 3–5 minutes before starting.</li>
+            </ul>
+        </div>
+
+        <div class="suggestion-card">
+            <h2>🎵 Suggested Songs Based on Skill Level</h2>
+            <ul>
+                <li>Beginner: “Ode to Joy”, “Twinkle Twinkle”, “Easy Chords Progression”.</li>
+                <li>Intermediate: “Canon in D”, “Perfect”, “River Flows in You”.</li>
+                <li>Advanced: “Fur Elise”, “La Campanella (simplified)”, “Advanced Jazz Patterns”.</li>
+            </ul>
+        </div>
+
+        <div class="suggestion-card">
+            <h2>💡 Quick Tips to Improve Faster</h2>
+            <ul>
+                <li>Use a metronome — increase speed slowly.</li>
+                <li>Break difficult songs into 10-second sections.</li>
+                <li>Practice with eyes closed to improve finger memory.</li>
+                <li>Stay relaxed — tension slows progress.</li>
+            </ul>
+        </div>
+
+        <a href="/dashboard" class="back-btn">⬅ Back to Dashboard</a>
+    </div>
+</body>
+</html>

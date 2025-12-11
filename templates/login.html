@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Music Progress Tracker — Login</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: #0c134f; /* navy */
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-box {
+            background: white;
+            width: 350px;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+            color: #0c134f;
+        }
+
+        .login-title {
+            text-align: center;
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #0c134f;
+        }
+
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin-top: 12px;
+            border: 2px solid #c8a4ff; /* lavender */
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #9f72ff;
+            box-shadow: 0 0 4px rgba(159, 114, 255, 0.6);
+        }
+
+        .login-button {
+            width: 100%;
+            margin-top: 25px;
+            padding: 12px;
+            background: #c8a4ff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: #0c134f;
+        }
+
+        .login-button:hover {
+            background: #b78aff;
+        }
+
+        .error {
+            margin-top: 15px;
+            padding: 10px;
+            background: #ffdfdf;
+            border-left: 4px solid #ff6b6b;
+            color: #770000;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-box">
+        <div class="login-title">Music Progress Tracker</div>
+
+        <form method="POST">
+            <input type="text" placeholder="5-Digit Username" name="username" required>
+            <input type="password" placeholder="5-Digit Password" name="password" required>
+
+            <button class="login-button">Login</button>
+
+            {% if error %}
+            <div class="error">{{ error }}</div>
+            {% endif %}
+        </form>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="page-container">
+    <h2 class="page-title">Errors</h2>
+
+    <form method="POST" class="simple-form">
+        <textarea name="error_text" placeholder="Write the mistakes you made today…" required></textarea>
+        <button type="submit" class="submit-btn">Add Entry</button>
+    </form>
+
+    <div class="entries-container">
+        {% if errors %}
+            {% for e in errors %}
+                <div class="entry-card">
+                    <p class="entry-date">{{ e.date }}</p>
+                    <p class="entry-text">{{ e.text }}</p>
+
+                    <a href="/delete_error/{{ e.id }}" class="delete-btn small">Delete</a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="no-entries">No mistakes logged yet.</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

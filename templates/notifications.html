@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="page-container">
+
+    <h2 class="page-title">Notifications</h2>
+
+    <div class="notifications-container">
+        {% if notifications %}
+            {% for n in notifications %}
+                <div class="notification-card">
+                    <h3>{{ n.title }}</h3>
+                    <p class="notification-meta">By {{ n.teacher_name }} • {{ n.date }}</p>
+                    <p class="notification-message">{{ n.message }}</p>
+
+                    {% if n.file_path %}
+                        <a href="{{ url_for('static', filename='notifications/' + n.file_path) }}" 
+                           class="view-file-btn" target="_blank">
+                           View Attached File
+                        </a>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="no-notifications">No notifications yet.</p>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

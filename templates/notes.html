@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="page-container">
+    <h2 class="page-title">Notes</h2>
+
+    <form method="POST" class="simple-form">
+        <textarea name="note_text" placeholder="Write anything you want to remember…" required></textarea>
+        <button type="submit" class="submit-btn">Add Note</button>
+    </form>
+
+    <div class="entries-container">
+        {% if notes %}
+            {% for n in notes %}
+                <div class="entry-card">
+                    <p class="entry-date">{{ n.date }}</p>
+                    <p class="entry-text">{{ n.text }}</p>
+
+                    <a href="/delete_note/{{ n.id }}" class="delete-btn small">Delete</a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="no-entries">No notes added yet.</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

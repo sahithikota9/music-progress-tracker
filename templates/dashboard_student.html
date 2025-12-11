@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="dashboard-cards">
+
+    <!-- Card 1 -->
+    <div class="dash-card">
+        <h2>Today’s Practice</h2>
+        <p class="dash-number">{{ today_hours }} hrs</p>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="dash-card">
+        <h2>This Month</h2>
+        <p class="dash-number">{{ month_hours }} hrs</p>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="dash-card">
+        <h2>Notes This Week</h2>
+        <p class="dash-number">{{ notes_week }}</p>
+    </div>
+
+</div>
+
+<div class="dashboard-actions">
+    <a href="{{ url_for('hours') }}" class="grad-btn">Add Hours</a>
+    <a href="{{ url_for('notes') }}" class="grad-btn">Add Note</a>
+    <a href="{{ url_for('errors') }}" class="grad-btn">Add Error</a>
+</div>
+
+<div class="mini-graph-section">
+    <h2>Last 7 Days</h2>
+    <img src="{{ url_for('sparkline') }}" class="mini-graph">
+</div>
+
+{% endblock %}

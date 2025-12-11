@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Library</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='library.css') }}">
+</head>
+
+<body class="theme">
+    <div class="header">
+        <h1 class="title">🎵 Music Library</h1>
+        <p class="subtitle">Listen, learn, and practice anytime</p>
+    </div>
+
+    <div class="controls">
+        <input type="text" id="search" placeholder="Search music...">
+        <select id="categoryFilter">
+            <option value="all">All Categories</option>
+            <option value="scales">Scales</option>
+            <option value="intervals">Intervals</option>
+            <option value="exercises">Exercises</option>
+            <option value="songs">Songs</option>
+        </select>
+        <select id="sortOrder">
+            <option value="name">Sort by Name</option>
+            <option value="date">Sort by Date</option>
+        </select>
+    </div>
+
+    <div id="musicContainer" class="grid"></div>
+
+    <script src="{{ url_for('static', filename='library.js') }}"></script>
+    <script>
+        loadLibrary("public");
+    </script>
+</body>
+</html>
